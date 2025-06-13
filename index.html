@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Bahasa</title>
+    <style>
+    /* BODY & LAYOUT */
+    body {
+    background: linear-gradient(135deg, #263238, #607d8b);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e3f2fd;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    }
+    header {
+    padding: 30px 20px 10px;
+    font-weight: 700;
+    font-size: 2.6rem;
+    letter-spacing: 2px;
+    text-align: center;
+    width: 100%;
+    user-select: none;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+    }
+    section {
+    width: 90%;
+    max-width: 480px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    padding: 25px 30px 40px;
+    margin-bottom: 40px;
+    display: none;
+    flex-direction: column;
+    }
+
+    /* === COVER === */
+    #cover {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0; left: 0;
+    background: linear-gradient(135deg, #263238, #607d8b);
+    z-index: 1000;
+    color: #e3f2fd;
+    user-select: none;
+    padding: 20px;
+    box-sizing: border-box;
+    }
+    #cover img {
+    max-width: 50%;
+    max-height: 50vh;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    #cover .cover-text {
+    max-width: 50%;
+    margin-left: 70px;
+    font-weight: 800;
+    font-size: 2.5rem;
+    line-height: 1.3;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    }
+    #startBtn {
+    margin-top: 40px;
+    padding: 16px 50px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    border-radius: 12px;
+    border: none;
+    background-color: #455a64;
+    color: #e3f2fd;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(69, 90, 100, 0.8);
+    transition: background-color 0.3s ease;
+    align-self: start;
+    width: fit-content;
+    user-select: none;
+    }
+    #startBtn:hover {
+    background-color: #37474f;
+    }
+
+    /* === NAV BUTTONS === */
+    #navButtons {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 15px;
+    }
+    #navButtons button {
+    background-color: #607d8b;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 12px;
+    color: #eceff1;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(96,125,139,0.7);
+    transition: background-color 0.3s ease;
+    }
+    #navButtons button:hover, #navButtons button.active {
+    background-color: #546e7a;
+    box-shadow: 0 0 15px #607d8b;
+    }
+
+    /* === LEARNING SECTION === */
+    #learning {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 1000px;
+    padding: 0 30px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    }
+
+    #languageSelect {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1.5rem;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: #607d8b;
+    color: #e3f2fd;
+    box-shadow: 0 2px 8px rgba(96,125,139,0.7);
+    margin-bottom: 40px;
+    }
+
+    #learningList {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 15px;
+    }
+
+    .learning-item {
+    flex: 0 0 95%;
+    max-width: 100%;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    scroll-snap-align: center;
+    transition: background 0.3s ease;
+    }
+    .learning-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    object-fit: cover;
+    }
+    .learning-item:hover {
+    background: rgba(84,110,122,0.4);
+    }
+    .learning-item .source {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #eceff1;
+    }
+    .learning-item .target {
+    font-size: 1.2rem;
+    color: #cfd8dc;
+    }
+
+    #startQuizBtn {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    background-color: #455a64;
+    color: #e3f2fd;
+    padding: 15px 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+    border-radius: 15px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(69,90,100,0.8);
+    transition: background-color 0.3s ease;
+    user-select: none;
+    }
+    #startQuizBtn:hover {
+    background-color: #37474f;
+    }
+
+/* === RESPONSIVE SIZING === */
+@media (min-width: 1024px) {
+.learning-item {
+flex: 0 0 32%;
+max-width: 450px;
+}
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+.learning-item {
+flex: 0 0 48%;
+max-width: 400px;
+}
+}
+@media (max-width: 767px) {
+.learning-item {
+flex: 0 0 95%;
+max-width: 100%;
+}
+}
+
+/* === QUIZ SECTION === */
+#question {
+font-size: 1.8rem;
+font-weight: 700;
+margin-bottom: 18px;
+text-shadow: 2px 2px 7px rgba(0,0,0,0.6);
+text-align: center;
+}
+#optionsContainer button {
+background-color: #607d8b;
+border: none;
+color: #e3f2fd;
+padding: 14px 0;
+width: 100%;
+margin: 8px 0;
+font-size: 1.3rem;
+font-weight: 600;
+border-radius: 12px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+box-shadow: 0 4px 10px rgba(96,125,139,0.7);
+user-select: none;
+}
+#optionsContainer button:hover {
+background-color: #546e7a;
+}
+#optionsContainer button.correct {
+background-color: #4caf50 !important;
+box-shadow: 0 0 15px #4caf50;
+}
+#optionsContainer button.wrong {
+background-color: #ef5350 !important;
+box-shadow: 0 0 15px #ef5350;
+}
+#score {
+margin-top: 25px;
+font-size: 1.4rem;
+font-weight: 700;
+color: #ffca28;
+text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+text-align: center;
+}
+#restartQuizBtn {
+margin-top: 24px;
+background-color: #455a64;
+color: #e3f2fd;
+padding: 14px 0;
+font-size: 1.25rem;
+font-weight: 700;
+border-radius: 12px;
+border: none;
+width: 100%;
+cursor: pointer;
+box-shadow: 0 6px 15px rgba(69,90,100,0.8);
+transition: background-color 0.3s ease;
+user-select: none;
+}
+#restartQuizBtn:hover {
+background-color: #37474f;
+}
+</style>
+</head>
+<body>
+
+<header>Quiz Bahasa</header>
+
+<!-- Cover -->
+<div id="cover">
+  <img src="Mycover2.jpeg" alt="Cover image" />
+  <div class="cover-text">
+    Selamat Datang di Quiz Bahasaku!<br />
+    Yuk belajar bahasa sekaligus quiz interaktif seru!<br /><br />
+    <button id="startBtn">Mulai</button>
+  </div>
+</div>
+
+<!-- Navigation Buttons -->
+<div id="navButtons" style="display: none;">
+  <button id="navLearning" class="active">Belajar</button>
+  <button id="navQuiz">Quiz</button>
+</div>
+
+<!-- Learning Section -->
+</div>
+<section id="learning">
+  <label for="languageSelect">Pilih Bahasa:</label>
+  <select id="languageSelect">
+    <option value="eng">English</option>
+    <option value="kor">Korean</option>
+    <option value="chi">Chinese</option>
+    <option value="jpn">Japanese</option>
+    <option value="ara">Arabic</option>
+  </select>
+  <div id="learningList"></div>
+  <button id="startQuizBtn">Mulai Quiz</button>
+</section>
+
+<!-- Quiz Section -->
+<section id="quiz">
+  <h2 id="question"></h2>
+  <div id="optionsContainer"></div>
+  <p id="score">Skor: 0</p>
+  <button id="restartQuizBtn" style="display:none;">Ulangi Quiz</button>
+</section>
+
+<script>
+    const data = {
+    eng: [
+      { source: "Apple", target: ["Apel", "Jeruk", "Pisang", "Mangga", "Nanas"], correct: 0, image: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg" },
+      { source: "Dog", target: ["Kucing", "Anjing", "Kuda", "Burung", "Ikan"], correct: 1, image: "Dog.jpeg" },
+      { source: "Sun", target: ["Bintang", "Bulan", "Matahari", "Awan", "Hujan"], correct: 2, image: "Matahari.jpeg" },
+      { source: "Water", target: ["Es", "Api", "Tanah", "Angin", "Air"], correct: 4, image: "Air.jpeg" },
+      { source: "Book", target: ["Papan", "Televisi", "Buku", "Meja", "Kursi"], correct: 2, image: "Buku.jpeg" }
+    ],
+    kor: [
+      { source: "불 (bul)", target: ["Angin", "Api", "Tanah", "Air", "Es"], correct: 1, image: "Api.jpeg" },
+      { source: "해 (Hae)", target: ["Bulan", "Matahari", "Bintang", "Awan", "Hujan"], correct: 1, image: "Matahari.jpeg" },
+      { source: "책 (Chaek)", target: ["Pulpen", "Lemari", "Papan", "Meja", "Buku"], correct: 4, image: "Buku.jpeg" },
+      { source: "고양이 (goyangi)", target: ["Kucing", "Anjing", "Kuda", "Unta", "Domba"], correct: 0, image: "Kucing.jpeg" },
+      { source: "사과 (Sagwa)", target: ["Anggur", "Jeruk", "Apel", "Mangga", "jambu"], correct: 2, image: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg" },
+    ],
+    chi: [
+      { source: "鳄鱼 (èyú)", target: ["Kucing", "Angsa", "Buaya", "Serigala", "Ayam"], correct: 2, image: "Buaya.jpeg" },
+      { source: "书 (Shū)", target: ["Sapu", "Radio", "Penghapus", "Kursi", "Buku"], correct: 4, image: "Buku.jpeg" },
+      { source: "太阳 (Tàiyáng)", target: ["Awan", "Matahari", "Bintang", "Planet", "Pelangi"], correct: 1, image: "Matahari.jpeg" },
+      { source: "香蕉 (xiāngjiāo)", target: ["Stroberi", "Apel", "Pisang", "Markisa", "Kelapa"], correct: 2, image: "Pisang.jpeg" },
+      { source: "水 (shuǐ)", target: ["Air", "Lumpur", "Api", "Angin", "Es"], correct: 0, image: "Air.jpeg" },
+    ],
+    jpn: [
+      { source: "りんご (Ringo)", target: ["Apel", "Jeruk", "Pisang", "Mangga", "Nanas"], correct: 0, image: "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg" },
+      { source: "とり (tori)", target: ["Kucing", "Anjing", "Kuda", "Burung", "Ikan"], correct: 3, image: "Burung.jpeg" },
+      { source: "たいよう (Taiyō)", target: ["Matahari", "Bulan", "Bintang", "Awan", "Hujan"], correct: 0, image: "Matahari.jpeg" },
+      { source: "みず (Mizu)", target: ["Es", "Api", "Tanah", "Angin", "Air"], correct: 4, image: "Air.jpeg" },
+      { source: "えんぴつ (enpitsu)", target: ["Buku", "Pensil", "Papan", "Meja", "Kursi"], correct: 1, image: "Pensil.jpeg" }
+    ],
+    ara: [
+      { source: "شمس (shams)", target: ["Matahari", "Bulan", "Bintang", "Awan", "Hujan"], correct: 0, image: "Matahari.jpeg" },
+      { source: "فراولة (farāwilah)", target: ["Apel", "Leci", "Alpukat", "Mangga", "Stroberi"], correct: 4, image: "Stroberi.jpeg" },
+      { source: "كلب (kalb)", target: ["Kucing", "Anjing", "Kuda", "Burung", "Ikan"], correct: 1, image: "Dog.jpeg" },
+      { source: "ماء (mā)", target: ["Air", "Api", "Tanah", "Angin", "Es"], correct: 0, image: "Air.jpeg" },
+      { source: "التلفاز (at-tilfāz)", target: ["Buku", "Televisi", "Papan", "Meja", "Kursi"], correct: 1, image: "TV.jpeg" },
+    ],
+  };
+
+    // === GET ELEMENTS ===
+  const cover = document.getElementById('cover');
+  const startBtn = document.getElementById('startBtn');
+  const navButtons = document.getElementById('navButtons');
+  const navLearningBtn = document.getElementById('navLearning');
+  const navQuizBtn = document.getElementById('navQuiz');
+  const learningSection = document.getElementById('learning');
+  const quizSection = document.getElementById('quiz');
+  const languageSelect = document.getElementById('languageSelect');
+  const learningList = document.getElementById('learningList');
+  const startQuizBtn = document.getElementById('startQuizBtn');
+  const questionEl = document.getElementById('question');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const scoreEl = document.getElementById('score');
+  const restartQuizBtn = document.getElementById('restartQuizBtn');
+  
+  
+  let currentCategory = "eng";
+  let currentIndex = 0;
+  let score = 0;
+  let quizActive = false;
+
+  function fillLearningList(category) {
+    learningList.innerHTML = '';
+    data[category].forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'learning-item';
+
+      const image = document.createElement('img');
+      image.src = item.image || 'img/default.png';
+      image.alt = item.source;
+      image.className = 'learning-image';
+
+      const sourceText = document.createElement('div');
+      sourceText.className = 'source';
+      sourceText.textContent = item.source;
+
+      const targetText = document.createElement('div');
+      targetText.className = 'target';
+      targetText.textContent = item.target[item.correct];
+
+      div.appendChild(image);
+      div.appendChild(sourceText);
+      div.appendChild(targetText);
+      learningList.appendChild(div);
+    });
+  }
+
+  function loadQuestion() {
+    const item = data[currentCategory][currentIndex];
+    questionEl.textContent = `Apa arti dari "${item.source}"?`;
+    optionsContainer.innerHTML = '';
+
+    item.target.forEach((option, idx) => {
+      const button = document.createElement('button');
+      button.textContent = option;
+      button.disabled = false;
+      button.onclick = () => selectAnswer(idx, button);
+      optionsContainer.appendChild(button);
+    });
+  }
+
+  function selectAnswer(selectedIdx, btn) {
+    const item = data[currentCategory][currentIndex];
+    const buttons = optionsContainer.querySelectorAll('button');
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      b.classList.remove('correct', 'wrong');
+    });
+
+    if (selectedIdx === item.correct) {
+      score++;
+      btn.classList.add('correct');
+    } else {
+      btn.classList.add('wrong');
+      buttons[item.correct].classList.add('correct');
+    }
+
+    scoreEl.textContent = `Skor: ${score}`;
+
+    setTimeout(() => {
+      currentIndex++;
+      if (currentIndex < data[currentCategory].length) {
+        loadQuestion();
+      } else {
+        finishQuiz();
+      }
+    }, 1300);
+  }
+
+  function finishQuiz() {
+    questionEl.textContent = `🎉 Selamat! Quiz selesai! Skor kamu: ${score} dari ${data[currentCategory].length} 🎉`;
+    optionsContainer.innerHTML = '';
+    restartQuizBtn.style.display = 'block';
+  }
+
+  function restartQuiz() {
+    currentIndex = 0;
+    score = 0;
+    scoreEl.textContent = `Skor: ${score}`;
+    restartQuizBtn.style.display = 'none';
+    loadQuestion();
+  }
+
+  // Event listeners
+  navLearningBtn.onclick = () => {
+    navLearningBtn.classList.add('active');
+    navQuizBtn.classList.remove('active');
+    quizSection.style.display = 'none';
+    learningSection.style.display = 'flex';
+    restartQuizBtn.style.display = 'none';
+  };
+
+  navQuizBtn.onclick = () => {
+    navQuizBtn.classList.add('active');
+    navLearningBtn.classList.remove('active');
+    learningSection.style.display = 'none';
+    quizSection.style.display = 'flex';
+    startQuiz();
+  };
+
+  languageSelect.onchange = () => {
+    currentCategory = languageSelect.value;
+    currentIndex = 0;
+    score = 0;
+    scoreEl.textContent = `Skor: ${score}`;
+    fillLearningList(currentCategory);
+    if (quizSection.style.display === 'flex') {
+    startQuiz(); // otomatis refresh quiz kalau kamu sedang di tampilan quiz
+}
+  };
+
+  startQuizBtn.onclick = () => {
+    navQuizBtn.click();
+  };
+
+  restartQuizBtn.onclick = restartQuiz;
+
+ function startQuiz() {
+  quizActive = true;
+  currentCategory = languageSelect.value; // tambahkan ini
+  currentIndex = 0;
+  score = 0;
+  scoreEl.textContent = `Skor: ${score}`;
+  restartQuizBtn.style.display = 'none';
+  loadQuestion();
+  }
+  startBtn.onclick = () => {
+  cover.style.display = 'none';
+  navButtons.style.display = 'flex';
+  learningSection.style.display = 'flex';
+  currentCategory = languageSelect.value; // update berdasarkan pilihan dropdown
+  fillLearningList(currentCategory);
+  };
+
+  window.onload = () => {
+    fillLearningList(currentCategory);
+    scoreEl.textContent = `Skor: 0`;
+  };
+</script>
+
+</body>
+</html>
